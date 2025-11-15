@@ -1,0 +1,13 @@
+<resources>
+    <string name="app_name">M Hike App</string>
+
+    <string name="hint_name">Hike name</string>
+    <string name="hint_location">Location</string>
+    <string name="hint_date">Date</string>
+    <string name="hint_parking">Parking Available (Yes/No)</string>
+    <string name="hint_length">Length (km)</string>
+    <string name="hint_difficulty">Difficulty Level</string>
+    <string name="hint_description">Description</string>
+
+    <string name="save_hike">Save Hike</string>
+</resources>
