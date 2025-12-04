@@ -7,6 +7,7 @@ import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
+
 import com.example.m_hike_app.R;
 import com.example.m_hike_app.data.Hike;
 
@@ -14,7 +15,9 @@ import java.util.List;
 
 public class HikeAdapter extends RecyclerView.Adapter<HikeAdapter.VH> {
 
-    public interface OnItemClickListener { void onItemClick(Hike hike); }
+    public interface OnItemClickListener {
+        void onItemClick(Hike hike);
+    }
 
     private List<Hike> list;
     private OnItemClickListener listener;

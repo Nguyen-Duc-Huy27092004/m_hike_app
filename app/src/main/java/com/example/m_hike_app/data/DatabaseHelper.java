@@ -5,6 +5,7 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -28,8 +29,8 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     private static final String TABLE_OBS = "observations";
     private static final String O_ID = "id";
     private static final String O_HIKE_ID = "hike_id";
-    private static final String O_TEXT = "observation";
-    private static final String O_TIME = "time";
+    private static final String O_TEXT = "text";
+    private static final String O_TIME = "timestamp";
     private static final String O_COMMENT = "comment";
 
     public DatabaseHelper(Context context) {
@@ -175,8 +176,8 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                 Observation o = new Observation();
                 o.setId(c.getInt(c.getColumnIndexOrThrow(O_ID)));
                 o.setHikeId(c.getInt(c.getColumnIndexOrThrow(O_HIKE_ID)));
-                o.setObservation(c.getString(c.getColumnIndexOrThrow(O_TEXT)));
-                o.setTime(c.getString(c.getColumnIndexOrThrow(O_TIME)));
+                o.setText(c.getString(c.getColumnIndexOrThrow(O_TEXT)));
+                o.setTimestamp(c.getString(c.getColumnIndexOrThrow(O_TIME)));
                 o.setComment(c.getString(c.getColumnIndexOrThrow(O_COMMENT)));
                 list.add(o);
             } while (c.moveToNext());
@@ -186,10 +187,72 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         return list;
     }
 
+    public Observation getObservationById(int id) {
+        SQLiteDatabase db = this.getReadableDatabase();
+        Cursor c = db.rawQuery("SELECT * FROM " + TABLE_OBS + " WHERE " + O_ID + " = ?", new String[]{String.valueOf(id)});
+        Observation o = null;
+        if (c.moveToFirst()) {
+            o = new Observation();
+            o.setId(c.getInt(c.getColumnIndexOrThrow(O_ID)));
+            o.setHikeId(c.getInt(c.getColumnIndexOrThrow(O_HIKE_ID)));
+            o.setText(c.getString(c.getColumnIndexOrThrow(O_TEXT)));
+            o.setTimestamp(c.getString(c.getColumnIndexOrThrow(O_TIME)));
+            o.setComment(c.getString(c.getColumnIndexOrThrow(O_COMMENT)));
+        }
+        c.close();
+        db.close();
+        return o;
+    }
+
+    public int updateObservation(Observation obs) {
+        SQLiteDatabase db = this.getWritableDatabase();
+        ContentValues values = new ContentValues();
+        values.put(O_TEXT, obs.getText());
+        values.put(O_TIME, obs.getTimestamp());
+        values.put(O_COMMENT, obs.getComment());
+        int rows = db.update(TABLE_OBS, values, O_ID + " = ?", new String[]{String.valueOf(obs.getId())});
+        db.close();
+        return rows;
+    }
+
     public int deleteObservation(int id) {
         SQLiteDatabase db = this.getWritableDatabase();
         int rows = db.delete(TABLE_OBS, O_ID + " = ?", new String[]{String.valueOf(id)});
         db.close();
         return rows;
     }
+    public List<Hike> searchHikes(String keyword) {
+        List<Hike> list = new ArrayList<>();
+        SQLiteDatabase db = this.getReadableDatabase();
+
+        String query = "SELECT * FROM " + TABLE_HIKES +
+                " WHERE " + H_NAME + " LIKE ? OR " +
+                H_LOCATION + " LIKE ? OR " +
+                H_DIFFICULTY + " LIKE ?" +
+                " ORDER BY " + H_ID + " DESC";
+
+        String like = "%" + keyword + "%";
+
+        Cursor c = db.rawQuery(query, new String[]{like, like, like});
+
+        if (c.moveToFirst()) {
+            do {
+                Hike h = new Hike();
+                h.setId(c.getInt(c.getColumnIndexOrThrow(H_ID)));
+                h.setName(c.getString(c.getColumnIndexOrThrow(H_NAME)));
+                h.setLocation(c.getString(c.getColumnIndexOrThrow(H_LOCATION)));
+                h.setDate(c.getString(c.getColumnIndexOrThrow(H_DATE)));
+                h.setParking(c.getString(c.getColumnIndexOrThrow(H_PARKING)));
+                h.setLength(c.getDouble(c.getColumnIndexOrThrow(H_LENGTH)));
+                h.setDifficulty(c.getString(c.getColumnIndexOrThrow(H_DIFFICULTY)));
+                h.setDescription(c.getString(c.getColumnIndexOrThrow(H_DESCRIPTION)));
+                list.add(h);
+            } while (c.moveToNext());
+        }
+
+        c.close();
+        db.close();
+        return list;
+    }
+
 }

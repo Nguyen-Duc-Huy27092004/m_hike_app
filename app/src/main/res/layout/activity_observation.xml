@@ -1,10 +1,40 @@
 <?xml version="1.0" encoding="utf-8"?>
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     android:padding="16dp"
-    android:layout_width="match_parent" android:layout_height="match_parent">
-    <LinearLayout android:orientation="vertical" android:layout_width="match_parent" android:layout_height="wrap_content">
-        <EditText android:id="@+id/etObservation" android:hint="Observation" android:layout_width="match_parent" android:layout_height="wrap_content"/>
-        <EditText android:id="@+id/etComment" android:hint="Comment (optional)" android:layout_width="match_parent" android:layout_height="wrap_content"/>
-        <Button android:id="@+id/btnSaveObservation" android:text="Save Observation" android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginTop="12dp"/>
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <LinearLayout android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <EditText android:id="@+id/etObsText"
+            android:hint="Observation text"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:minHeight="120dp"
+            android:gravity="top"/>
+
+        <EditText android:id="@+id/etObsDate"
+            android:hint="Timestamp (YYYY-MM-DD HH:MM)"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:focusable="false"
+            android:clickable="true"
+            android:layout_marginTop="12dp"/>
+
+        <EditText android:id="@+id/etObsComment"
+            android:hint="Comment (optional)"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:minHeight="80dp"
+            android:gravity="top"
+            android:layout_marginTop="12dp"/>
+
+        <Button android:id="@+id/btnSaveObservation"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Save Observation"
+            android:layout_marginTop="16dp"/>
     </LinearLayout>
 </ScrollView>

@@ -10,7 +10,6 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.MHikeApp">
 
-        <!-- Main activity -->
         <activity
             android:name=".MainActivity"
             android:exported="true">
@@ -20,7 +19,6 @@
             </intent-filter>
         </activity>
 
-        <!-- Other activities -->
         <activity android:name=".AddHikeActivity" />
         <activity android:name=".HikeDetailActivity" />
         <activity android:name=".ObservationActivity" />

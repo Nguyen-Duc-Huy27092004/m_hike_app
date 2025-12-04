@@ -3,6 +3,7 @@ package com.example.m_hike_app.adapters;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -14,7 +15,10 @@ import java.util.List;
 
 public class ObservationAdapter extends RecyclerView.Adapter<ObservationAdapter.VH> {
 
-    public interface OnItemClickListener { void onItemClick(Observation observation); }
+    public interface OnItemClickListener {
+        void onItemClick(Observation observation);
+        void onDeleteClick(Observation observation);
+    }
 
     private List<Observation> list;
     private OnItemClickListener listener;
@@ -34,10 +38,12 @@ public class ObservationAdapter extends RecyclerView.Adapter<ObservationAdapter.
     @Override
     public void onBindViewHolder(@NonNull VH holder, int position) {
         Observation o = list.get(position);
-        holder.tvObservation.setText(o.getObservation());
-        holder.tvTime.setText(o.getTime());
-        holder.tvComment.setText(o.getComment());
+        holder.tvObservation.setText(o.getText());
+        holder.tvTime.setText(o.getTimestamp());
+        holder.tvComment.setText(o.getComment() == null ? "" : o.getComment());
+
         holder.itemView.setOnClickListener(v -> listener.onItemClick(o));
+        holder.btnDelete.setOnClickListener(v -> listener.onDeleteClick(o));
     }
 
     @Override
@@ -45,11 +51,13 @@ public class ObservationAdapter extends RecyclerView.Adapter<ObservationAdapter.
 
     static class VH extends RecyclerView.ViewHolder {
         TextView tvObservation, tvTime, tvComment;
+        Button btnDelete;
         VH(@NonNull View itemView) {
             super(itemView);
             tvObservation = itemView.findViewById(R.id.tvObservation);
             tvTime = itemView.findViewById(R.id.tvTime);
             tvComment = itemView.findViewById(R.id.tvComment);
+            btnDelete = itemView.findViewById(R.id.btnDeleteObs);
         }
     }
 }

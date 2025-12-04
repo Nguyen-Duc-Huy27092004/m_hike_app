@@ -2,7 +2,7 @@ package com.example.m_hike_app;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.view.View;
+import android.widget.SearchView;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -25,6 +25,7 @@ public class MainActivity extends AppCompatActivity {
     DatabaseHelper db;
     MaterialButton btnReload;
     FloatingActionButton btnAdd;
+    SearchView searchView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -36,6 +37,7 @@ public class MainActivity extends AppCompatActivity {
         recyclerView = findViewById(R.id.recyclerView);
         btnReload = findViewById(R.id.btnReload);
         btnAdd = findViewById(R.id.btnAdd);
+        searchView = findViewById(R.id.searchView);
 
         adapter = new HikeAdapter(hikes, hike -> {
             Intent i = new Intent(MainActivity.this, HikeDetailActivity.class);
@@ -51,6 +53,21 @@ public class MainActivity extends AppCompatActivity {
         );
 
         btnReload.setOnClickListener(v -> loadData());
+
+        // ⭐ THÊM LISTENER CHO SEARCHVIEW TẠI ĐÚNG VỊ TRÍ ⭐
+        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+            @Override
+            public boolean onQueryTextSubmit(String query) {
+                performSearch(query);
+                return true;
+            }
+
+            @Override
+            public boolean onQueryTextChange(String newText) {
+                performSearch(newText);
+                return true;
+            }
+        });
     }
 
     @Override
@@ -61,8 +78,18 @@ public class MainActivity extends AppCompatActivity {
 
     private void loadData() {
         hikes.clear();
-        List<Hike> list = db.getAllHikes();
-        hikes.addAll(list);
+        hikes.addAll(db.getAllHikes());
+        adapter.notifyDataSetChanged();
+    }
+
+    private void performSearch(String keyword) {
+        if (keyword.trim().isEmpty()) {
+            loadData();
+            return;
+        }
+
+        hikes.clear();
+        hikes.addAll(db.searchHikes(keyword));
         adapter.notifyDataSetChanged();
     }
 }

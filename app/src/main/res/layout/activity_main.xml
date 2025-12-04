@@ -11,6 +11,15 @@
         android:layout_height="match_parent"
         android:padding="8dp"/>
 
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/btnReload"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Reload"
+        app:layout_anchor="@id/recyclerView"
+        app:layout_anchorGravity="bottom|start"
+        android:layout_margin="16dp"/>
+
     <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/btnAdd"
         android:layout_width="wrap_content"
@@ -20,12 +29,13 @@
         app:layout_anchorGravity="bottom|end"
         android:layout_margin="16dp"/>
 
-    <com.google.android.material.button.MaterialButton
-        android:id="@+id/btnReload"
-        android:layout_width="wrap_content"
+    <SearchView
+        android:id="@+id/searchView"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Reload"
-        app:layout_anchor="@id/recyclerView"
-        app:layout_anchorGravity="bottom|start"
-        android:layout_margin="16dp"/>
+        android:queryHint="Search hikes..."
+        app:layout_anchor="@+id/recyclerView"
+        app:layout_anchorGravity="bottom|center" />
+
+
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

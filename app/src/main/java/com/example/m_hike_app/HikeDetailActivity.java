@@ -1,6 +1,5 @@
 package com.example.m_hike_app;
 
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.widget.Button;
@@ -54,9 +53,19 @@ public class HikeDetailActivity extends AppCompatActivity {
         obsAdapter = new ObservationAdapter(observations, new ObservationAdapter.OnItemClickListener() {
             @Override
             public void onItemClick(Observation observation) {
-                // could implement edit/delete per observation
+                // open edit observation
+                Intent i = new Intent(HikeDetailActivity.this, ObservationActivity.class);
+                i.putExtra("obs_id", observation.getId());
+                i.putExtra("hike_id", hikeId);
+                startActivity(i);
+            }
+
+            @Override
+            public void onDeleteClick(Observation observation) {
+                confirmDeleteObservation(observation);
             }
         });
+
         recyclerObservations.setLayoutManager(new LinearLayoutManager(this));
         recyclerObservations.setAdapter(obsAdapter);
 
@@ -67,12 +76,14 @@ public class HikeDetailActivity extends AppCompatActivity {
         });
 
         btnEdit.setOnClickListener(v -> {
-            Toast.makeText(HikeDetailActivity.this, "Edit functionality can be added (open AddHike in edit mode).", Toast.LENGTH_SHORT).show();
+            Intent i = new Intent(HikeDetailActivity.this, AddHikeActivity.class);
+            i.putExtra("hike_id", hikeId);
+            startActivity(i);
         });
 
         btnDelete.setOnClickListener(v -> new AlertDialog.Builder(HikeDetailActivity.this)
                 .setTitle("Delete Hike")
-                .setMessage("Delete this hike?")
+                .setMessage("Delete this hike and all its observations?")
                 .setPositiveButton("Yes", (dialog, which) -> {
                     db.deleteHike(hikeId);
                     Toast.makeText(HikeDetailActivity.this, "Deleted", Toast.LENGTH_SHORT).show();
@@ -106,5 +117,18 @@ public class HikeDetailActivity extends AppCompatActivity {
         observations.clear();
         observations.addAll(db.getObservationsForHike(hikeId));
         obsAdapter.notifyDataSetChanged();
+    }
+
+    private void confirmDeleteObservation(Observation observation) {
+        new AlertDialog.Builder(HikeDetailActivity.this)
+                .setTitle("Delete Observation")
+                .setMessage("Are you sure you want to delete this observation?")
+                .setPositiveButton("Yes", (dialog, which) -> {
+                    db.deleteObservation(observation.getId());
+                    loadObservations();
+                    Toast.makeText(HikeDetailActivity.this, "Observation deleted", Toast.LENGTH_SHORT).show();
+                })
+                .setNegativeButton("No", null)
+                .show();
     }
 }
